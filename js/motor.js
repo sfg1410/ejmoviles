@@ -92,7 +92,7 @@ var productos=[
         grande:600,
     },
 ]
-var compras=[]
+var compras=[];
 pintar();
 numeroC=0;
 function pintar() {
@@ -112,12 +112,12 @@ function pintar() {
                 <p>${productos[x].nombre}</p>
             </div>
             <div class="opciones">
-                <div> <input type="radio" name="memoria${x}" id="memoriap${x}" onclick="cambiar64" ><p>64Gb</p></div>
-               <div>  <input type="radio" name="memoria${x}" id="memoriam${x}" onclick="cambiar128" checked><p>128Gb</p></div>
-               <div>  <input type="radio" name="memoria${x}" id="memoriag${x}" onclick="cambiar256" ><p>256Gb</p></div>
+                <div> <input type="radio" name="memoria${x}" id="memoriap${x}" onclick="cambiar(${x})" ><p>64Gb</p></div>
+               <div>  <input type="radio" name="memoria${x}" id="memoriam${x}" onclick="cambiar(${x})" checked><p>128Gb</p></div>
+               <div>  <input type="radio" name="memoria${x}" id="memoriag${x}" onclick="cambiar(${x})" ><p>256Gb</p></div>
              </div>
             <div class="boton">
-                <button onclick="anadirCarrito('${productos[x].nombre}',${productos[x].precio})">Comprar</button>
+                <button onclick="anadirCarrito(${x})">Comprar</button>
             </div>
         </div>
         </div> 
@@ -125,16 +125,60 @@ function pintar() {
         `;
     }
 }
-function pintarpedido() {
+function cambiar(x) {
+    if(document.getElementById(`memoriap${x}`).checked){
+        document.getElementById(`cajaprecio${x}`).innerHTML=productos[x].pequeno;
+    }
+    if(document.getElementById(`memoriam${x}`).checked){
+        document.getElementById(`cajaprecio${x}`).innerHTML=productos[x].mediano;
+    }
+    if(document.getElementById(`memoriag${x}`).checked){
+        document.getElementById(`cajaprecio${x}`).innerHTML=productos[x].grande;
+    }
 
-    let contador=0;
-    for(let x=0; x<productos.length;x++){
+}
+function anadirCarrito(x) {
+    
+    if(document.getElementById(`memoriap${x}`).checked){
+        // document.getElementById('totalpedido').innerHTML=productos[x].pequeno;
+        valorP=productos[x].pequeno
+    }
+    if(document.getElementById(`memoriam${x}`).checked){
+        // document.getElementById('totalpedido').innerHTML=productos[x].mediano;
+        valorP=productos[x].mediano
+
+    }
+    if(document.getElementById(`memoriag${x}`).checked){
+        // document.getElementById('totalpedido').innerHTML=productos[x].grande;
+        valorP=productos[x].grande
+    }
+
+    nombreP=productos[x].nombre;
+    compras.push({nombre:nombreP, precio:valorP})
+    sumatotal();
+
+}
+function sumatotal() {
+    contador=0;
+    document.getElementById('contenedorCarrito').innerHTML="";
+    for(x=0; x<compras.length;x++){
+        contador+=compras[x].precio;
+        document.getElementById('contenedorCarrito').innerHTML+=`<div>${compras[x].nombref} ${compras[x].precio} </div>`;
+    }
+    document.getElementById('totalpedido').innerHTML=contador;
+}
+
+
+// function pintarpedido() {
+
+//     let contador=0;
+//     for(let x=0; x<productos.length;x++){
        
         
-        contador+=total(`${x}`);
-    }
-    document.getElementById("totalpedido").innerHTML=contador+ "€";
-}
+//         contador+=total(`${x}`);
+//     }
+//     document.getElementById("totalpedido").innerHTML=contador+ "€";
+// }
 
 
 // function devolvercheck(posicion) {
@@ -150,54 +194,59 @@ function pintarpedido() {
     
 // }
 
-function comprar(posicion) {
-    let valor;
-    if(document.getElementById(`memoriap${posicion}`).checked){
-        valor=productos[posicion].pequeno;
-        memoriatlf='64Gb'
-    }
-    if(document.getElementById(`memoriam${posicion}`).checked){
-        valor=productos[posicion].mediano;
-        memoriatlf='128Gb'
-    }
-    if(document.getElementById(`memoriag${posicion}`).checked){
-        valor=productos[posicion].grande;
-        memoriatlf='256Gb'
-    }
-    pedido.push({nombre:productos[posicion].nombre, precio:valor, memoria:memoriatlf, foto:productos[posicion].foto });
+// function comprar(posicion) {
+//     let valor;
+//     if(document.getElementById(`memoriap${posicion}`).checked){
+//         valor=productos[posicion].pequeno;
+//         memoriatlf='64Gb'
+//     }
+//     if(document.getElementById(`memoriam${posicion}`).checked){
+//         valor=productos[posicion].mediano;
+//         memoriatlf='128Gb'
+//     }
+//     if(document.getElementById(`memoriag${posicion}`).checked){
+//         valor=productos[posicion].grande;
+//         memoriatlf='256Gb'
+//     }
+//     pedido.push({nombre:productos[posicion].nombre, precio:valor, memoria:memoriatlf, foto:productos[posicion].foto });
 
-}
+// }
 
-function total(posicion) {
-    return productos[posicion].precio;
-}
-function anadirCarrito( nombreP ,precioP){
-    numeroC++;
- document.getElementById('pedido').innerHTML=numeroC;
+// function total(posicion) {
+//     return productos[posicion].precio;
+// }
+// function anadirCarrito(x){
+//     numeroC++;
+//  document.getElementById('pedido').innerHTML=numeroC;
   
-    alert("Artículo añadido al Carrito " + nombreP);
+//     if(document.getElementById(`memoria${x}`).checked){
+//       document.getElementById(`memoriap${x}`).innerHTML=productos[x].pequeno;
+//     }
+//     if(document.getElementById(`memoriam${x}`).checked){
+//         precioP=productos[x].mediano;
+//     }
+//     if(document.getElementById(`memoriag${x}`).checked){
+//         precioP=productos[x].grande;
+//     }
+//    this.compras.push({ precio:precioP });
+//    sumar();
+
+  
+//    }
    
-   this.compras.push({nombre:nombreP, precio:precioP});
-   }
-   
-   function listarCarrito() {
-       document.getElementById('contenedorCarrito').innerHTML="";
-       for(let x=0;x<compras.length;x++){
-           document.getElementById('contenedorCarrito').innerHTML+=`<div class="cajaCarrito"><div>${compras[x].nombre} </div>
-                                                                    <div>${compras[x].precio}  </div>
-                                                                    </div>` ;
-       }
+//    function listarCarrito() {
+//        document.getElementById('contenedorCarrito').innerHTML="";
+//        for(let x=0;x<compras.length;x++){
+//            document.getElementById('contenedorCarrito').innerHTML+=`<div class="cajaCarrito"><div>${compras[x].nombre} </div>
+//                                                                     <div>${compras[x].precio}  </div>
+//                                                                     </div>` ;
+//        }
        
-   }
-   function cambiar64(posicion) {
-       let valor=productos[posicion].pequeno;
-       document.getElementById(`precio${posicion}`).innerHTML=valor;
-   }
-   function cambiar128(posicion) {
-    let valor=productos[posicion].mediano;
-    document.getElementById(`precio${posicion}`).innerHTML=valor;
-}
-function cambiar256(posicion) {
-    let valor=productos[posicion].grande;
-    document.getElementById(`precio${posicion}`).innerHTML=valor;
-}
+//    }
+//    function sumar() {
+//        contador=0;
+//        for(let x=0;x>compras.length; x++){
+//            contador+=compras[x].precio;
+//        document.getElementById('totalpedido').innerHTML=contador;
+//     }
+//    }
